@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canvas Particles — yuemiu 开源示例</title>
+<style>
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:0;background:#0f1117;color:#e6e6e6;min-height:100vh}
+  .bar{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#1a1d27;border-bottom:1px solid #2a2e3d;font-size:13px}
+  .bar a{color:#6c8cff;text-decoration:none}
+  .demo-wrap{padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:30px;min-height:60vh}
+  .demo-wrap > * {max-width:100%}
+  
+</style>
+</head>
+<body>
+<div class="bar"><strong>Canvas Particles</strong><a href="https://yuemiu.cn/" target="_blank" rel="noopener">更多组件 → yuemiu.cn 粤喵组件库</a></div>
+<div class="demo-wrap">
+<canvas id="particles" style="width:100%;height:320px;background:#0f1117;"></canvas>
+</div>
+<script>const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+const cfg = { count: 70, dist: 120, color: '#6c8cff' };
+
+function resize() {
+  const r = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  W = canvas.width = r.width * dpr;
+  H = canvas.height = r.height * dpr;
+  ctx.scale(dpr, dpr);
+}
+function init() {
+  particles = [];
+  for (let i = 0; i < cfg.count; i++) {
+    particles.push({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - .5) * .6, vy: (Math.random() - .5) * .6,
+      r: Math.random() * 2 + 1,
+    });
+  }
+}
+function step() {
+  ctx.clearRect(0, 0, W, H);
+  for (const p of particles) {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > W) p.vx *= -1;
+    if (p.y < 0 || p.y > H) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = cfg.color; ctx.fill();
+  }
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const a = particles[i], b = particles[j];
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (d < cfg.dist) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = cfg.color;
+        ctx.globalAlpha = 1 - d / cfg.dist;
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(step);
+}
+resize(); init(); step();
+window.addEventListener('resize', () => { resize(); init(); });</script>
+</body>
+</html>
