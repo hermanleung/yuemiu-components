@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glitch Text Effect — yuemiu 开源示例</title>
+<style>
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:0;background:#0f1117;color:#e6e6e6;min-height:100vh}
+  .bar{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#1a1d27;border-bottom:1px solid #2a2e3d;font-size:13px}
+  .bar a{color:#6c8cff;text-decoration:none}
+  .demo-wrap{padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:30px;min-height:60vh}
+  .demo-wrap > * {max-width:100%}
+  .glitch { position: relative; color: #e8e8e8; }
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);   /* 复制文字 */
+  position: absolute; top: 0; left: 0;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.glitch::before { color: #ff3b6b; animation: sliceA 1.8s steps(1, end) infinite, shiftA 1.8s linear infinite alternate; }
+.glitch::after  { color: #38f9d7; animation: sliceB 2.6s steps(1, end) infinite, shiftB 2.6s linear infinite alternate; }
+
+/* 随机切片：clip-path 每次瞬间跳到不同高度区间 */
+@keyframes sliceA {
+  0%   { clip-path: inset(10% 0 62% 0); }
+  20%  { clip-path: inset(55% 0 12% 0); }
+  40%  { clip-path: inset(28% 0 48% 0); }
+  60%  { clip-path: inset(70% 0 6% 0); }
+  80%  { clip-path: inset(42% 0 35% 0); }
+  100% { clip-path: inset(8% 0 78% 0); }
+}
+/* 错位漂移 */
+@keyframes shiftA { from { transform: translate(-4px, 2px); } to { transform: translate(4px, -2px); } }
+.hover-only::before, .hover-only::after { opacity: 0; }
+.hover-only:hover::before { opacity: 1; animation: sliceA 1.2s steps(1, end) infinite, shiftA .6s linear infinite alternate; }
+.hover-only:hover::after  { opacity: 1; animation: sliceB 1.5s steps(1, end) infinite, shiftB .8s linear infinite alternate; }
+</style>
+</head>
+<body>
+<div class="bar"><strong>Glitch Text Effect</strong><a href="https://yuemiu.cn/" target="_blank" rel="noopener">更多组件 → yuemiu.cn 粤喵组件库</a></div>
+<div class="demo-wrap">
+<h2 class="glitch auto" data-text="粤喵组件站">粤喵组件站</h2>
+<h2 class="glitch hover-only" data-text="悬停触发毛刺">悬停触发毛刺</h2>
+</div>
+
+</body>
+</html>
