@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blur Reveal Text — yuemiu 开源示例</title>
+<style>
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:0;background:#0f1117;color:#e6e6e6;min-height:100vh}
+  .bar{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#1a1d27;border-bottom:1px solid #2a2e3d;font-size:13px}
+  .bar a{color:#6c8cff;text-decoration:none}
+  .demo-wrap{padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:30px;min-height:60vh}
+  .demo-wrap > * {max-width:100%}
+  .br-line {
+  opacity: 0; filter: blur(14px); transform: translateY(10px);
+  transition:
+    opacity .9s ease var(--d, 0s),
+    filter .9s ease var(--d, 0s),
+    transform .9s ease var(--d, 0s);
+}
+.br-stage.show .br-line { opacity: 1; filter: blur(0); transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="bar"><strong>Blur Reveal Text</strong><a href="https://yuemiu.cn/" target="_blank" rel="noopener">更多组件 → yuemiu.cn 粤喵组件库</a></div>
+<div class="demo-wrap">
+<div class="br-stage" id="brStage">
+  <p class="br-line" style="--d:0s">真正的优雅</p>
+  <p class="br-line" style="--d:.18s">不是一目了然</p>
+  <p class="br-line" style="--d:.36s">而是从模糊之中</p>
+  <p class="br-line" style="--d:.54s">慢慢变得清晰</p>
+</div>
+</div>
+<script>const stage = document.getElementById("brStage");
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => stage.classList.toggle('show', e.isIntersecting));
+}, { threshold: 0.25 });
+io.observe(stage);</script>
+</body>
+</html>
